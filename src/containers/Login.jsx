@@ -1,4 +1,9 @@
 import React from "react";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import { authenticateData } from "../utils/authenticate";
+import { Container } from "react-bootstrap";
+import { Formik, Field, ErrorMessage } from 'formik';
 
 // El formulario se deberá renderizar al ingresar a cualquier ruta si el usuario no está autenticado,
 // conteniendo los campos:
@@ -18,8 +23,72 @@ import React from "react";
 // realizar las validaciones no es necesario utilizar ninguna librería.
 
 const Login = () => {
+
+  const valuesRequiredByFormik = {
+    initialValues: { email: '', password: '' },
+    validate: values => {
+      const errors = {};
+      if (!values.email) {
+        errors.email = 'Required';
+      } else if (
+        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+      ) {
+        errors.email = 'Invalid email address';
+      }
+      if (!values.password) {
+        errors.password = 'Required';
+      }
+      return errors;
+    },
+    onSubmit: ({ email, password }) => {
+      handleSubmit(email, password)
+    }
+  }
+
+  const email = 'challenge@alkemy.org'
+  const password = 'react'
+
+  const handleSubmit = (email, password) => {
+    authenticateData(email, password)
+      .then(token => {
+        localStorage.setItem('token', token.data.token)
+      })
+      .catch(error => {
+        new Error(error)
+        console.log('no resuelto')
+      })
+  }
+
+
   return (
-    <h2>Login</h2>
+    <Container className="mt-5">
+      <Formik {...valuesRequiredByFormik}>
+        {({ handleSubmit, isSubmitting }) => (
+          <Form className="col-md-6 mx-md-auto" onSubmit={handleSubmit}>
+            <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Label>Email address</Form.Label>
+              <div className="row ms-0 me-0" >
+                <Field type="email" name="email" placeholder="Enter email" />
+              </div>
+              <ErrorMessage name="email" component="div" />
+              <Form.Text className="text-muted">
+                We'll never share your email with anyone else.
+              </Form.Text>
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formBasicPassword">
+              <Form.Label>Password</Form.Label>
+              <div className="row ms-0 me-0">
+                <Field type="password" name="password" placeholder="Password" />
+              </div>
+              <ErrorMessage name="password" component="div" />
+            </Form.Group>
+            <Button variant="primary" type="submit" disabled={isSubmitting}>
+              Submit
+            </Button>
+          </Form>
+        )}
+      </Formik>
+    </Container>
   )
 }
 
