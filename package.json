@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/PabloTachella/food-menu#readme",
   "dependencies": {
+    "@reduxjs/toolkit": "^1.7.2",
     "axios": "^0.25.0",
     "bootstrap": "^5.1.3",
     "formik": "^2.2.9",

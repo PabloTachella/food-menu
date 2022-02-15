@@ -8,7 +8,6 @@ import { searchDishes } from "../utils/getData";
 // mostrar nada. La validación deberá realizarse utilizando la librería Formik.
 
 const DishesFinder = () => {
-  searchDishes('ris')
   return (
     <h2>Dishes Finder</h2>
   )

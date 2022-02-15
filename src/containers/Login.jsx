@@ -1,7 +1,6 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { authenticateData } from "../utils/authenticate";
 import { Container } from "react-bootstrap";
 import { Formik, Field, ErrorMessage } from 'formik';
 
@@ -22,7 +21,7 @@ import { Formik, Field, ErrorMessage } from 'formik';
 // que si es satisfactorio deberá redirigir al Home y almacenar el token obtenido en localStorage. Para
 // realizar las validaciones no es necesario utilizar ninguna librería.
 
-const Login = () => {
+const Login = ({ handleSubmit }) => {
 
   const valuesRequiredByFormik = {
     initialValues: { email: '', password: '' },
@@ -44,21 +43,6 @@ const Login = () => {
       handleSubmit(email, password)
     }
   }
-
-  const email = 'challenge@alkemy.org'
-  const password = 'react'
-
-  const handleSubmit = (email, password) => {
-    authenticateData(email, password)
-      .then(token => {
-        localStorage.setItem('token', token.data.token)
-      })
-      .catch(error => {
-        new Error(error)
-        console.log('no resuelto')
-      })
-  }
-
 
   return (
     <Container className="mt-5">
