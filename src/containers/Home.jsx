@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Container } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { Card, Container } from "react-bootstrap";
 import { getDishes } from "../utils/getData";
 import { setData, updateData } from "../store/slices/dishes";
 
@@ -29,6 +30,7 @@ const Home = () => {
   const dishes = []
   const { data } = useSelector(state => state.dishes)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   let accPrice = 0
   let averagePreparationTime = 0
@@ -73,10 +75,12 @@ const Home = () => {
   }
 
   const averagesAndAcc = [
-    { title: 'Average Preparation Time', value: `${averagePreparationTime} minutos` },
+    { title: 'Average Preparation Time', value: `${averagePreparationTime} minutes` },
     { title: 'Average Health Score', value: `${averageHealthScore}` },
     { title: 'Total Price', value: `$ ${accPrice}` }
   ]
+
+  const moreDetails = () => navigate('/dish-detail')
 
   // --------------- Example dish ---------------
   // aggregateLikes: 1669
@@ -116,13 +120,21 @@ const Home = () => {
     <Container>
       <div className="row">
         <div className="col-md-9">
-          {data.map(dish =>
-            <Dish key={dish.id} {...dish} deleteDish={deleteDish} />
-          )}
+          {data.length > 0 &&
+            data.map(dish =>
+              <Dish key={dish.id} {...dish} deleteDish={deleteDish} />
+            )}
+          {data.length < 4 &&
+            <Card body
+              className="text-muted text-center my-md-3 my-lg-4"
+              style={{ cursor: 'pointer' }}
+              onClick={() => navigate('/dishes-finder')}>add Dish
+            </Card>
+          }
         </div>
         <div className="col-md-3">
           {averagesAndAcc.map((el, index) =>
-            <AveragesCard key={index} {...el}></AveragesCard>)
+            <AveragesCard key={index} {...el} moreDetails={moreDetails}></AveragesCard>)
           }
         </div>
       </div>
