@@ -1,0 +1,11 @@
+.delete-container {
+  position: absolute;
+  right: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  z-index: 1;
+}
+
+.delete-container:hover {
+  cursor: pointer;
+}

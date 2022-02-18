@@ -8,10 +8,13 @@ export const dishSlice = createSlice({
   reducers: {
     setData: (state, action) => {
       state.data = action.payload
+    },
+    updateData: (state, action) => {
+      state.data = state.data.filter(dish => dish.id !== action.payload)
     }
   }
 })
 
-export const { setData } = dishSlice.actions
+export const { setData, updateData } = dishSlice.actions
 
 export default dishSlice.reducer

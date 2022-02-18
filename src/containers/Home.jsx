@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { getDishes } from "../utils/getData";
-import { setData } from "../store/slices/dishes";
+import { setData, updateData } from "../store/slices/dishes";
 
 import Dish from '../components/Dish'
+import AveragesCard from "../components/AveragesCard";
 
 // El Home de la aplicación mostrará los platos del menú en un listado. Cada ítem (el cuál debe ser un
 //   componente separado) del listado contendrá:
@@ -24,26 +25,58 @@ import Dish from '../components/Dish'
 // utilizando Hooks)
 
 const Home = () => {
-  const DIETS = { vegan: 'vegan', notVegan: 'whole30' }
+  const [firstLoad, setFirstLoad] = useState(true)
   const dishes = []
   const { data } = useSelector(state => state.dishes)
   const dispatch = useDispatch()
 
-  // res.data.results array
-  if (data.length == 0) {
+  let accPrice = 0
+  let averagePreparationTime = 0
+  let averageHealthScore = 0
+
+  const deleteDish = id => {
+    dispatch(updateData(id))
+  }
+
+  if (data.length == 0 && firstLoad) {
+    const DIETS = { vegan: 'vegan' }
     const numberOfDishes = 2
     const addRecipeNutrition = true
+    const includeIngredients = 'meat'
 
     Promise.all([
-      getDishes(DIETS.vegan, numberOfDishes, addRecipeNutrition),
-      getDishes(DIETS.notVegan, numberOfDishes, addRecipeNutrition)
+      getDishes({ diet: DIETS.vegan, numberOfDishes, addRecipeNutrition }),
+      getDishes({ numberOfDishes, addRecipeNutrition, includeIngredients })
     ]).then(res => {
       res.map(el => dishes.push(...el.data.results))
       dispatch(setData(dishes))
     }).catch(error => {
       new Error(error)
     })
+
+    setFirstLoad(false)
   }
+
+  if (data.length >= 1) {
+    let accPreparationTime = 0
+    let accHealthScore = 0
+
+    data.map(dish => {
+      accPrice = accPrice + dish.pricePerServing
+      accPreparationTime = accPreparationTime + dish.readyInMinutes
+      accHealthScore = accHealthScore + dish.healthScore
+    })
+
+    accPrice = accPrice.toFixed(2)
+    averagePreparationTime = parseInt(accPreparationTime / data.length)
+    averageHealthScore = (accHealthScore / data.length).toFixed(1)
+  }
+
+  const averagesAndAcc = [
+    { title: 'Average Preparation Time', value: `${averagePreparationTime} minutos` },
+    { title: 'Average Health Score', value: `${averageHealthScore}` },
+    { title: 'Total Price', value: `$ ${accPrice}` }
+  ]
 
   // --------------- Example dish ---------------
   // aggregateLikes: 1669
@@ -82,12 +115,16 @@ const Home = () => {
   return (
     <Container>
       <div className="row">
-        <div className="col-md-8">
+        <div className="col-md-9">
           {data.map(dish =>
-            <Dish key={dish.id} {...dish} />
+            <Dish key={dish.id} {...dish} deleteDish={deleteDish} />
           )}
         </div>
-        <div className="col-md-4"></div>
+        <div className="col-md-3">
+          {averagesAndAcc.map((el, index) =>
+            <AveragesCard key={index} {...el}></AveragesCard>)
+          }
+        </div>
       </div>
     </Container>
   )
