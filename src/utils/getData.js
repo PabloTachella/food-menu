@@ -10,9 +10,11 @@ const QUERY_PARAMS = {
 
 export function getDishes({diet, numberOfDishes = 1, addRecipeNutrition = false, includeIngredients, query}) {
   const url_root = `${API}${QUERY_PARAMS.complexSearch}?apiKey=${API_KEY}`
-
+  const request = query ?
+  `${url_root}&diet=${diet}&number=${numberOfDishes}&addRecipeNutrition=${addRecipeNutrition}&includeIngredients=${includeIngredients}&query=${query}`
+  : `${url_root}&diet=${diet}&number=${numberOfDishes}&addRecipeNutrition=${addRecipeNutrition}&includeIngredients=${includeIngredients}`
   return axios.get(
-    `${url_root}&diet=${diet}&number=${numberOfDishes}&addRecipeNutrition=${addRecipeNutrition}&includeIngredients=${includeIngredients}&query=${query}`
+    request
     // Si hacia la consulta de la siguiente forma
     // url_root ,{ diet: diet, number: amount }
     // Realizaba {amount} cantidad de consultas con 10 resultados cada una, revisar comportamiento.

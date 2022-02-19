@@ -9,12 +9,15 @@ export const dishSlice = createSlice({
     setData: (state, action) => {
       state.data = action.payload
     },
-    updateData: (state, action) => {
+    deleteData: (state, action) => {
       state.data = state.data.filter(dish => dish.id !== action.payload)
+    },
+    addToData: (state, action) => {
+      state.data = [...state.data, action.payload]
     }
   }
 })
 
-export const { setData, updateData } = dishSlice.actions
+export const { setData, deleteData, addToData } = dishSlice.actions
 
 export default dishSlice.reducer

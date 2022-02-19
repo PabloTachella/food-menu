@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Card, Container } from "react-bootstrap";
 import { getDishes } from "../utils/getData";
-import { setData, updateData } from "../store/slices/dishes";
+import { setData, deleteData } from "../store/slices/dishes";
 
 import Dish from '../components/Dish'
 import AveragesCard from "../components/AveragesCard";
@@ -27,6 +27,7 @@ import AveragesCard from "../components/AveragesCard";
 
 const Home = () => {
   const [firstLoad, setFirstLoad] = useState(true)
+  const [loading, setLoading] = useState(false)
   const dishes = []
   const { data } = useSelector(state => state.dishes)
   const dispatch = useDispatch()
@@ -37,10 +38,11 @@ const Home = () => {
   let averageHealthScore = 0
 
   const deleteDish = id => {
-    dispatch(updateData(id))
+    dispatch(deleteData(id))
   }
 
   if (data.length == 0 && firstLoad) {
+    setLoading(true)
     const DIETS = { vegan: 'vegan' }
     const numberOfDishes = 2
     const addRecipeNutrition = true
@@ -52,8 +54,10 @@ const Home = () => {
     ]).then(res => {
       res.map(el => dishes.push(...el.data.results))
       dispatch(setData(dishes))
+      setLoading(false)
     }).catch(error => {
       new Error(error)
+      console.log(error)
     })
 
     setFirstLoad(false)
@@ -81,6 +85,8 @@ const Home = () => {
   ]
 
   const moreDetails = () => navigate('/dish-detail')
+
+  const showDishDetails = dish => {}
 
   // --------------- Example dish ---------------
   // aggregateLikes: 1669
@@ -120,12 +126,17 @@ const Home = () => {
     <Container>
       <div className="row">
         <div className="col-md-9">
+          {loading &&
+            <div className="row">
+              <span className="text-center">...Cargando</span>
+            </div>
+          }
           {data.length > 0 &&
             data.map(dish =>
-              <Dish key={dish.id} {...dish} deleteDish={deleteDish} />
+              <Dish key={dish.id} dish={dish} deleteDish={deleteDish} clickCard={showDishDetails} />
             )
           }
-          {data.length < 4 &&
+          {data.length < 4 && !loading &&
             <Card body
               className="text-muted text-center my-md-3 my-lg-4"
               style={{ cursor: 'pointer' }}
@@ -135,7 +146,7 @@ const Home = () => {
         </div>
         <div className="col-md-3">
           {averagesAndAcc.map((el, index) =>
-            <AveragesCard key={index} {...el} moreDetails={moreDetails}></AveragesCard>)
+            <AveragesCard key={index} {...el} moreDetails={moreDetails} ></AveragesCard>)
           }
         </div>
       </div>

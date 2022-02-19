@@ -21,7 +21,7 @@ const Layout = () => {
       .then(token => {
         localStorage.setItem('token', token.data.token)
         dispatch(setAuthentication({ token: token.data.token, authenticated: true }))
-        navigate('/dishes-finder')
+        navigate('/home')
       })
       .catch(error => {
         new Error(error)

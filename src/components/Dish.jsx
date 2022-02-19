@@ -3,7 +3,8 @@ import { Card } from "react-bootstrap";
 import "../assets/styles/Dish.css"
 
 //style={{ width: '100%' }}
-const Dish = ({ title, image, nutrition, id, deleteDish, showInSearchSection }) => {
+const Dish = ({ dish, deleteDish, showInSearchSection, clickCard }) => {
+  const { title, image, nutrition, id, vegan } = dish
   let NUTRIENTS = []
   showInSearchSection ?
     NUTRIENTS = ['Calories', 'Protein'] :
@@ -22,10 +23,12 @@ const Dish = ({ title, image, nutrition, id, deleteDish, showInSearchSection }) 
 
   const colOfNutrients = showInSearchSection ? "col-6" : "col-3"
   const colContainer = showInSearchSection ? "col-sm-6 col-md-3" : "col"
+  const colorContainerStyle = vegan ? {borderColor: 'green'} : {}
+  const colorTitleStyle = vegan ? {color: 'green'} : {}
 
   const bodyCard =
     <Card.Body>
-      <Card.Title>{title}</Card.Title>
+      <Card.Title style={colorTitleStyle}>{title}</Card.Title>
       <div className="row">
         {nutrientsToShow.map(({ name, amount, unit }, index) =>
           <div className={colOfNutrients} key={index}>
@@ -44,7 +47,10 @@ const Dish = ({ title, image, nutrition, id, deleteDish, showInSearchSection }) 
 
   return (
     <div className={colContainer}>
-      <Card className="my-md-3 my-lg-4">
+      <Card className="my-md-3 my-lg-4"
+        onClick={() => clickCard(dish)}
+        style={colorContainerStyle}
+      >
         {!showInSearchSection &&
           <>
             <div className="delete-container" onClick={() => deleteDish(id)}>
