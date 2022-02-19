@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Header from '../components/Header';
@@ -21,7 +21,7 @@ const Layout = () => {
       .then(token => {
         localStorage.setItem('token', token.data.token)
         dispatch(setAuthentication({ token: token.data.token, authenticated: true }))
-        navigate('/home')
+        navigate('/dishes-finder')
       })
       .catch(error => {
         new Error(error)

@@ -123,7 +123,8 @@ const Home = () => {
           {data.length > 0 &&
             data.map(dish =>
               <Dish key={dish.id} {...dish} deleteDish={deleteDish} />
-            )}
+            )
+          }
           {data.length < 4 &&
             <Card body
               className="text-muted text-center my-md-3 my-lg-4"

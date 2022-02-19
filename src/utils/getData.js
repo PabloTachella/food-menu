@@ -8,24 +8,24 @@ const QUERY_PARAMS = {
   autocomplete: 'autocomplete',
 }
 
-export function getDishes({diet, numberOfDishes = 1, addRecipeNutrition = false, includeIngredients}) {
+export function getDishes({diet, numberOfDishes = 1, addRecipeNutrition = false, includeIngredients, query}) {
   const url_root = `${API}${QUERY_PARAMS.complexSearch}?apiKey=${API_KEY}`
 
   return axios.get(
-    `${url_root}&diet=${diet}&number=${numberOfDishes}&addRecipeNutrition=${addRecipeNutrition}&includeIngredients=${includeIngredients}`
+    `${url_root}&diet=${diet}&number=${numberOfDishes}&addRecipeNutrition=${addRecipeNutrition}&includeIngredients=${includeIngredients}&query=${query}`
     // Si hacia la consulta de la siguiente forma
     // url_root ,{ diet: diet, number: amount }
     // Realizaba {amount} cantidad de consultas con 10 resultados cada una, revisar comportamiento.
   )
 }
 
-export async function searchDishes(query = '') {
-  try {
-    const response = await axios.get(
-      `${API}${QUERY_PARAMS.autocomplete}?apiKey=${API_KEY}&query=${query}`
-    )
-    console.log(response)
-  } catch (error) {
-    console.log(error)
-  }
-}
+// export async function searchDishes(query = '') {
+//   try {
+//     const response = await axios.get(
+//       `${API}${QUERY_PARAMS.autocomplete}?apiKey=${API_KEY}&query=${query}`
+//     )
+//     console.log(response)
+//   } catch (error) {
+//     console.log(error)
+//   }
+// }
