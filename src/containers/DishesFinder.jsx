@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Container, InputGroup, FormControl, Button } from "react-bootstrap";
+import Swal from 'sweetalert2'
 import { getDishes } from "../utils/getData";
 import { addToData } from "../store/slices/dishes";
 
@@ -53,18 +54,49 @@ const DishesFinder = () => { // Buscador de Platos
   }
 
   const addToTheMenu = dish => {
-    if (data.some(el => el.id == dish.id )) {
-      console.log('No se puede agregar, el plato ya esta en la carta')
-    } else if (data.length >= 4) {
-      console.log('no se pueden agregar más platos')
+    const dishesVegans = data.filter(dish => dish.vegan == true).length
+    const dishesNotVegan = data.filter(dish => dish.vegan == false).length
+
+
+    if (data.length >= 4) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Cannot be added, the menu is full!'
+      })
+    } else if (data.some(el => el.id == dish.id)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'It cannot be added, the dish is already on the menu!'
+      })
+    } else if (dish.vegan && dishesVegans >= 2) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'There are already two vegan dishes on the menu!'
+      })
+    } else if (!dish.vegan && dishesNotVegan >= 2) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'There are already two non-vegan dishes on the menu!'
+      })
     } else {
       dispatch(addToData(dish))
-    } 
+      Swal.fire({
+        position: 'top-end',
+        icon: 'success',
+        title: 'Successfully added',
+        showConfirmButton: false,
+        timer: 1500
+      })
+    }
   }
 
   return (
     <Container>
-      <InputGroup className="mb-3">
+      <InputGroup className="my-3">
         <FormControl
           placeholder="Enter a plate"
           aria-label="Recipient's username"
@@ -79,7 +111,9 @@ const DishesFinder = () => { // Buscador de Platos
       </InputGroup>
       <div className="row g-4">
         {loading &&
-          <span className="text-center">...Cargando</span>
+          <div className="alert alert-primary text-center" role="alert">
+            Loading...
+          </div>
         }
         {dishes.length > 0 &&
           dishes.map(dish =>

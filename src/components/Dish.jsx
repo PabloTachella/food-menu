@@ -23,7 +23,7 @@ const Dish = ({ dish, deleteDish, showInSearchSection, clickCard }) => {
 
   const colOfNutrients = showInSearchSection ? "col-6" : "col-3"
   const colContainer = showInSearchSection ? "col-sm-6 col-md-3" : "col"
-  const colorContainerStyle = vegan ? {borderColor: 'green'} : {}
+  const colorContainerStyle = vegan ? {borderColor: 'green', cursor: 'pointer'} : {cursor: 'pointer'}
   const colorTitleStyle = vegan ? {color: 'green'} : {}
 
   const bodyCard =

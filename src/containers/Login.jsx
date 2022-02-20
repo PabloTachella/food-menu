@@ -21,7 +21,7 @@ import { Formik, Field, ErrorMessage } from 'formik';
 // que si es satisfactorio deberá redirigir al Home y almacenar el token obtenido en localStorage. Para
 // realizar las validaciones no es necesario utilizar ninguna librería.
 
-const Login = ({ handleSubmit }) => {
+const Login = ({ handleSubmit, authenticating }) => {
 
   const valuesRequiredByFormik = {
     initialValues: { email: '', password: '' },
@@ -39,8 +39,8 @@ const Login = ({ handleSubmit }) => {
       }
       return errors;
     },
-    onSubmit: ({ email, password }) => {
-      handleSubmit(email, password)
+    onSubmit: ({ email, password }, { resetForm }) => {
+      handleSubmit(email, password, resetForm)
     }
   }
 
@@ -54,7 +54,7 @@ const Login = ({ handleSubmit }) => {
               <div className="row ms-0 me-0" >
                 <Field type="email" name="email" placeholder="Enter email" />
               </div>
-              <ErrorMessage name="email" component="div" />
+              <ErrorMessage name="email" component="div" style={{ color: 'red' }} />
               <Form.Text className="text-muted">
                 We'll never share your email with anyone else.
               </Form.Text>
@@ -64,8 +64,13 @@ const Login = ({ handleSubmit }) => {
               <div className="row ms-0 me-0">
                 <Field type="password" name="password" placeholder="Password" />
               </div>
-              <ErrorMessage name="password" component="div" />
+              <ErrorMessage name="password" component="div" style={{ color: 'red' }} />
             </Form.Group>
+            {authenticating &&
+              <div className="alert alert-primary text-center" role="alert">
+                authenticating, please wait...
+              </div>
+            }
             <Button variant="primary" type="submit" disabled={isSubmitting}>
               Submit
             </Button>

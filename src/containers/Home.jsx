@@ -86,7 +86,7 @@ const Home = () => {
 
   const moreDetails = () => navigate('/dish-detail')
 
-  const showDishDetails = dish => {}
+  const showDishDetails = dish => { }
 
   // --------------- Example dish ---------------
   // aggregateLikes: 1669
@@ -127,8 +127,8 @@ const Home = () => {
       <div className="row">
         <div className="col-md-9">
           {loading &&
-            <div className="row">
-              <span className="text-center">...Cargando</span>
+            <div className="alert alert-primary text-center" role="alert">
+              Loading...
             </div>
           }
           {data.length > 0 &&
