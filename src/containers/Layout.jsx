@@ -13,10 +13,18 @@ const Layout = () => {
   const [authenticating, setAuthenticating] = useState(false)
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  let token
 
   // Credenciales validas para la autenticación
   // const email = 'challenge@alkemy.org'
   // const password = 'react'
+
+  if (!authenticated) {
+    token = localStorage.getItem('token')
+  }
+  if (token) {
+    dispatch(setAuthentication({ token: token, authenticated: true}))
+  }
 
   const handleSubmit = (email, password, resetForm) => {
     setAuthenticating(true)
