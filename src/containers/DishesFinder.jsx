@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 import { getDishes } from "../utils/getData";
 import { addToData } from "../store/slices/dishes";
 
-import Dish from "../components/Dish";
+import SimpleCard from "../components/SimpleCard";
 
 // Para agregar un plato al menú, se deberá visualizar un formulario que realice una petición GET al
 // endpoint de búsqueda y muestre los resultados disponibles en un grid, utilizando el componente de
@@ -96,9 +96,12 @@ const DishesFinder = () => { // Buscador de Platos
 
   return (
     <Container>
+      <h2 className="text-center text-muted">
+        Search through thousands of recipes
+      </h2>
       <InputGroup className="my-3">
         <FormControl
-          placeholder="Enter a plate"
+          placeholder="Enter a plate..."
           aria-label="Recipient's username"
           aria-describedby="basic-addon2"
           onChange={handleChange}
@@ -116,8 +119,16 @@ const DishesFinder = () => { // Buscador de Platos
           </div>
         }
         {dishes.length > 0 &&
+          <p className="text-center text-muted">
+            Select a dish and it will be added to the menu
+          </p>
+        }
+        {dishes.length > 0 &&
+
           dishes.map(dish =>
-            <Dish key={dish.id} dish={dish} showInSearchSection={true} clickCard={addToTheMenu} />
+            <div className="col-sm-6 col-md-4 col-lg-3" key={dish.id}>
+              <SimpleCard dish={dish} verticalOrientation={true} clickCard={addToTheMenu} />
+            </div>
           )
         }
       </div>

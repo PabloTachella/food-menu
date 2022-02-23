@@ -46,13 +46,17 @@ const Login = ({ handleSubmit, authenticating }) => {
 
   return (
     <Container className="mt-5">
+      <h4 className="text-center">
+        Welcome, in Food Menu you can create a menu of dishes selecting from thousands of recipes
+      </h4>
+      <p className="text-center text-muted mb-5">login to start</p>
       <Formik {...valuesRequiredByFormik}>
         {({ handleSubmit, isSubmitting }) => (
           <Form className="col-md-6 mx-md-auto" onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Email address</Form.Label>
               <div className="row ms-0 me-0" >
-                <Field type="email" name="email" placeholder="Enter email" />
+                <Field type="email" name="email" placeholder="challenge@alkemy.org" />
               </div>
               <ErrorMessage name="email" component="div" style={{ color: 'red' }} />
               <Form.Text className="text-muted">
@@ -62,7 +66,7 @@ const Login = ({ handleSubmit, authenticating }) => {
             <Form.Group className="mb-3" controlId="formBasicPassword">
               <Form.Label>Password</Form.Label>
               <div className="row ms-0 me-0">
-                <Field type="password" name="password" placeholder="Password" />
+                <Field type="password" name="password" placeholder="react" />
               </div>
               <ErrorMessage name="password" component="div" style={{ color: 'red' }} />
             </Form.Group>
@@ -77,6 +81,9 @@ const Login = ({ handleSubmit, authenticating }) => {
           </Form>
         )}
       </Formik>
+      <p className="text-center text-muted mt-5">Obtain an authentication token by entering the following credentials</p>
+      <p className="text-center text-muted my-1">email: challenge@alkemy.org</p>
+      <p className="text-center text-muted my-1">password: react</p>
     </Container>
   )
 }

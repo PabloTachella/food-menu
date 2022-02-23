@@ -9,3 +9,9 @@
 .delete-container:hover {
   cursor: pointer;
 }
+
+@media (max-width: 991px) {
+  .exclude-on-small-screen {
+    display: none;
+  }
+}

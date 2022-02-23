@@ -3,7 +3,7 @@ import { Card } from "react-bootstrap";
 
 const AveragesCard = ({ title, value, moreDetails }) => {
   return (
-    <Card className="my-md-3 my-lg-4"
+    <Card className="p-0"
       style={{ cursor: 'pointer' }}
       onClick={() => moreDetails()}
     >

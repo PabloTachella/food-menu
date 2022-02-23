@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Card, Container } from "react-bootstrap";
 import { getDishes } from "../utils/getData";
 import { setData, deleteData } from "../store/slices/dishes";
 
-import Dish from '../components/Dish'
 import AveragesCard from "../components/AveragesCard";
+import ResposiveCard from "../components/ResponsiveCard";
 
 // El Home de la aplicación mostrará los platos del menú en un listado. Cada ítem (el cuál debe ser un
 //   componente separado) del listado contendrá:
@@ -26,7 +26,6 @@ import AveragesCard from "../components/AveragesCard";
 // utilizando Hooks)
 
 const Home = () => {
-  const [firstLoad, setFirstLoad] = useState(true)
   const [loading, setLoading] = useState(false)
   const dishes = []
   const { data } = useSelector(state => state.dishes)
@@ -41,12 +40,17 @@ const Home = () => {
     dispatch(deleteData(id))
   }
 
-  if (data.length == 0 && firstLoad) {
+  const moreDetails = () => navigate('/dish-detail')
+  const showDishDetails = dish => { }
+
+  // Se ejecuta por única vez en la primer carga de la página
+  useEffect( () => {
+    if (data.length == 0) {
     setLoading(true)
     const DIETS = { vegan: 'vegan' }
     const numberOfDishes = 2
     const addRecipeNutrition = true
-    const includeIngredients = 'meat'
+    const includeIngredients = ['meat']
 
     Promise.all([
       getDishes({ diet: DIETS.vegan, numberOfDishes, addRecipeNutrition }),
@@ -57,11 +61,8 @@ const Home = () => {
       setLoading(false)
     }).catch(error => {
       new Error(error)
-      console.log(error)
     })
-
-    setFirstLoad(false)
-  }
+  }},[])
 
   if (data.length >= 1) {
     let accPreparationTime = 0
@@ -84,9 +85,52 @@ const Home = () => {
     { title: 'Total Price', value: `$ ${accPrice}` }
   ]
 
-  const moreDetails = () => navigate('/dish-detail')
+  return (
+    <Container>
+      <div className="row">
+        <p className="text-center text-muted">
+        The menu has a maximum of 4 dishes / Two vegan and two non-vegan dishes / Vegan plates are distinguished by a green border
+        </p>
+        <div className="col-xl-9 mb-4">
+          {loading &&
+            <div className="alert alert-primary text-center" role="alert">
+              Loading...
+            </div>
+          }
+          <div className="row g-4">
+            {data.length > 0 &&
+              data.map(dish =>
+                <div className="col-sm-6 col-lg-12" key={dish.id}>
+                  <ResposiveCard 
+                    dish={dish}
+                    deleteDish={deleteDish}
+                    clickCard={showDishDetails}
+                  />
+                </div>
+              )
+            }
+            {data.length < 4 && !loading &&
+              <Card body
+                className="align-self-center text-muted text-center my-4 col-sm-6 col-lg-12"
+                style={{ cursor: 'pointer' }}
+                onClick={() => navigate('/dishes-finder')}>add Dish
+              </Card>
+            }
+          </div>
+        </div>
+        <div className="col-xl-3">
+          <div className="row g-4">
+            {averagesAndAcc.map((el, index) =>
+              <AveragesCard key={index} {...el} moreDetails={moreDetails} ></AveragesCard>)
+            }
+          </div>
+        </div>
+      </div>
+    </Container>
+  )
+}
 
-  const showDishDetails = dish => { }
+export default Home
 
   // --------------- Example dish ---------------
   // aggregateLikes: 1669
@@ -121,37 +165,3 @@ const Home = () => {
   // veryHealthy: true
   // veryPopular: true
   // weightWatcherSmartPoints: 19
-
-  return (
-    <Container>
-      <div className="row">
-        <div className="col-md-9">
-          {loading &&
-            <div className="alert alert-primary text-center" role="alert">
-              Loading...
-            </div>
-          }
-          {data.length > 0 &&
-            data.map(dish =>
-              <Dish key={dish.id} dish={dish} deleteDish={deleteDish} clickCard={showDishDetails} />
-            )
-          }
-          {data.length < 4 && !loading &&
-            <Card body
-              className="text-muted text-center my-md-3 my-lg-4"
-              style={{ cursor: 'pointer' }}
-              onClick={() => navigate('/dishes-finder')}>add Dish
-            </Card>
-          }
-        </div>
-        <div className="col-md-3">
-          {averagesAndAcc.map((el, index) =>
-            <AveragesCard key={index} {...el} moreDetails={moreDetails} ></AveragesCard>)
-          }
-        </div>
-      </div>
-    </Container>
-  )
-}
-
-export default Home

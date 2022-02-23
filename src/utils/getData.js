@@ -8,11 +8,15 @@ const QUERY_PARAMS = {
   autocomplete: 'autocomplete',
 }
 
-export function getDishes({diet, numberOfDishes = 1, addRecipeNutrition = false, includeIngredients, query}) {
+export function getDishes({
+  diet, numberOfDishes = 1, addRecipeNutrition = false, includeIngredients = null, query }) {
   const url_root = `${API}${QUERY_PARAMS.complexSearch}?apiKey=${API_KEY}`
+  const ingredients = includeIngredients ? includeIngredients.toString() : null
+
   const request = query ?
-  `${url_root}&diet=${diet}&number=${numberOfDishes}&addRecipeNutrition=${addRecipeNutrition}&includeIngredients=${includeIngredients}&query=${query}`
-  : `${url_root}&diet=${diet}&number=${numberOfDishes}&addRecipeNutrition=${addRecipeNutrition}&includeIngredients=${includeIngredients}`
+    `${url_root}&diet=${diet}&number=${numberOfDishes}&addRecipeNutrition=${addRecipeNutrition}&includeIngredients=${ingredients}&query=${query}`
+    : `${url_root}&diet=${diet}&number=${numberOfDishes}&addRecipeNutrition=${addRecipeNutrition}&includeIngredients=${ingredients}`
+
   return axios.get(
     request
     // Si hacia la consulta de la siguiente forma
