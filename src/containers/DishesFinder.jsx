@@ -96,7 +96,7 @@ const DishesFinder = () => { // Buscador de Platos
 
   return (
     <Container>
-      <h2 className="text-center text-muted">
+      <h2 className="text-center">
         Search through thousands of recipes
       </h2>
       <InputGroup className="my-3">
